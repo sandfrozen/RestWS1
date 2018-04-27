@@ -14,45 +14,52 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import resources.MessageService;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
 /**
  *
  * @author tomek.buslowski
  */
-
 @Path("/messages")
 public class MessageResource {
-    
-    MessageService messageService = new MessageService();
-    
+
+    MessageService messageService = MessageService.getInstance();
+
     @GET
     @Produces(MediaType.APPLICATION_XML)
     public List<Message> getMessages() {
         return messageService.getAllMessages();
     }
-    
-    @GET
-    @Path("/{id}")
-    @Produces(MediaType.APPLICATION_XML)
-    public Message getMessage(@PathParam("id") int id) {
-        return messageService.getAllMessages().get(id);
-    }
-    
+
     @GET
     @Path("/json")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Message> getText2() {
         return messageService.getAllMessages();
     }
-    
-    @POST
-    @Consumes("application/json")
-    public Response createProductInJSON(Message message) {
 
-        String result = "Message created : " + message;
-        System.out.println(message.getAuthor());
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMessage(@PathParam("id") int id) {
+        if (id > -1 && id < messageService.getAllMessages().size()) {
+            return Response.status(201).entity(messageService.getAllMessages().get(id)).build();
+        } else {
+            return Response.status(400).build();
+        }
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addMessage(Message message) {
+
+        String result = "Message created : " + message.getAuthor();
+        messageService.addMessage(message);
         return Response.status(201).entity(result).build();
     }
+
 }

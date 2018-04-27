@@ -16,7 +16,7 @@ public class Product {
     public String getName() {
         return name;
     }
-
+    
     public void setName(String name) {
         this.name = name;
     }
@@ -24,7 +24,7 @@ public class Product {
     public int getQty() {
         return qty;
     }
-
+    
     public void setQty(int qty) {
         this.qty = qty;
     }

@@ -15,8 +15,16 @@ import model.Message;
  */
 public class MessageService {
     private List<Message> list = new ArrayList<>();
-
-    public MessageService() {
+    private static MessageService instance;
+    
+    public static MessageService getInstance() {
+        if(instance == null) {
+            instance = new MessageService();
+        }
+        return instance;
+    }
+    
+    private MessageService() {
         Message m1 = new Message(1L, "Pierwsza wiadomość","Tomek");
         Message m2 = new Message(2L, "Druga wiadomość", "Jacek");
         Message m3 = new Message(3L, "Trzecia wiadomość","Adam");
@@ -27,6 +35,10 @@ public class MessageService {
     
     public List<Message> getAllMessages() {
         return list;
+    }
+    
+    public void addMessage(Message m) {
+        list.add(m);
     }
     
     

@@ -31,6 +31,7 @@ public class ApplicationConfig extends Application {
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(service.HelloWorldService.class);
         resources.add(service.MessageResource.class);
+        resources.add(service.ProductResource.class);
     }
     
 }
