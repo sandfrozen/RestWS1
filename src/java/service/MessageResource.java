@@ -8,17 +8,16 @@ package service;
 import model.Message;
 import java.util.List;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import resources.MessageService;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
 
 /**
  *
@@ -30,36 +29,50 @@ public class MessageResource {
     MessageService messageService = MessageService.getInstance();
 
     @GET
-    @Produces(MediaType.APPLICATION_XML)
-    public List<Message> getMessages() {
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Message> getMessages(@QueryParam("zaczynasie") String par1) {
+        if (par1 != null) {
+            return messageService.getAllMessagesStartingWith(par1);
+        }
         return messageService.getAllMessages();
     }
 
     @GET
-    @Path("/json")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/xml")
+    @Produces(MediaType.APPLICATION_XML)
     public List<Message> getText2() {
         return messageService.getAllMessages();
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{messageId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getMessage(@PathParam("id") int id) {
-        if (id > -1 && id < messageService.getAllMessages().size()) {
-            return Response.status(201).entity(messageService.getAllMessages().get(id)).build();
-        } else {
-            return Response.status(400).build();
-        }
+    public Message getMessage(@PathParam("messageId") Long id) {
+
+        return messageService.getMessage(id);
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addMessage(Message message) {
+    public Message createMessage(Message message) {
 
-        String result = "Message created : " + message.getAuthor();
-        messageService.addMessage(message);
-        return Response.status(201).entity(result).build();
+        return messageService.createMessage(message);
     }
 
+    @PUT
+    @Path("/{messageId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Message updateMessage(Message message) {
+
+        return messageService.updateMessage(message);
+    }
+
+    @DELETE
+    @Path("/{messageId}")
+//    @Consumes(MediaType.APPLICATION_JSON+ ";charset=utf-8")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void deleteMessage(@PathParam("messageId") Long id) {
+        messageService.deleteMessage(id);
+    }
 }

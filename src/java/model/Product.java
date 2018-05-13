@@ -13,6 +13,15 @@ public class Product {
     private String name;
     private int qty;
 
+    public Product(String name, int qty) {
+        this.name = name;
+        this.qty = qty;
+    }
+
+    public Product() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     public String getName() {
         return name;
     }

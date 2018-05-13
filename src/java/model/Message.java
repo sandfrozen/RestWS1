@@ -29,6 +29,11 @@ public class Message {
         this.created = new Date();
         this.author = author;
     }
+    public Message(String message, String author) {
+        this.message = message;
+        this.created = new Date();
+        this.author = author;
+    }
 
     /**
      * @return the id

@@ -6,7 +6,9 @@
 package resources;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import model.Message;
 
 /**
@@ -14,32 +16,57 @@ import model.Message;
  * @author tomek.buslowski
  */
 public class MessageService {
-    private List<Message> list = new ArrayList<>();
-    private static MessageService instance;
-    
+    static private Map<Long, Message> messages = new HashMap<Long, Message>();
+    static private MessageService instance;
+
     public static MessageService getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new MessageService();
         }
         return instance;
     }
-    
+
     private MessageService() {
-        Message m1 = new Message(1L, "Pierwsza wiadomość","Tomek");
-        Message m2 = new Message(2L, "Druga wiadomość", "Jacek");
-        Message m3 = new Message(3L, "Trzecia wiadomość","Adam");
-        list.add(m1);
-        list.add(m2);
-        list.add(m3);
+        messages.put(1L, new Message(1L, "Pierwsza Wiadomość", "Jacek"));
+        messages.put(2L, new Message(2L, "Druga Wiadomość", "Tomek"));
+        messages.put(3L, new Message(3L, "Trzecia Wiadomość", "Adam"));
     }
     
     public List<Message> getAllMessages() {
-        return list;
+        return new ArrayList<Message>(messages.values());
     }
     
-    public void addMessage(Message m) {
-        list.add(m);
+    public Message getMessage(Long id) {
+        return messages.get(id);
     }
     
+    public Message createMessage(Message message) {
+        message.setId(messages.size()+ 1L);
+        messages.put(messages.size()+ 1L, message);
+        
+        return message;
+    }
+    
+    public Message updateMessage(Message message) {
+        messages.get(message.getId()).setAuthor(message.getAuthor());
+        messages.get(message.getId()).setMessage(message.getMessage());
+        
+        return messages.get(message.getId());
+    }
+    
+    public void deleteMessage(Long id) {
+        messages.remove(id);
+    }
+
+    public List<Message> getAllMessagesStartingWith(String par1) {
+        ArrayList<Message> foundedMessages = new ArrayList<>();
+        par1 = par1.toLowerCase();
+        for (Message message : messages.values()) {
+            if( message.getMessage().toLowerCase().startsWith(par1)) {
+                foundedMessages.add(message);
+            }
+        }
+        return foundedMessages;
+    }
     
 }

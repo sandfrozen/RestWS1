@@ -32,6 +32,8 @@ public class ApplicationConfig extends Application {
         resources.add(service.HelloWorldService.class);
         resources.add(service.MessageResource.class);
         resources.add(service.ProductResource.class);
+        resources.add(service.SklepResource.class);
+        resources.add(testy.TestyResource.class);
     }
     
 }
