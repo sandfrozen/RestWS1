@@ -1,0 +1,40 @@
+<?xml version="1.0" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="message" type="message"/>
+
+  <xs:element name="product" type="product"/>
+
+  <xs:element name="responseList" type="responseList"/>
+
+  <xs:complexType name="responseList">
+    <xs:sequence>
+      <xs:element name="produkty" type="produkt" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="produkt">
+    <xs:sequence>
+      <xs:element name="cena" type="xs:int"/>
+      <xs:element name="nazwa" type="xs:string" minOccurs="0"/>
+      <xs:element name="producent" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="message">
+    <xs:sequence>
+      <xs:element name="author" type="xs:string" minOccurs="0"/>
+      <xs:element name="creaated" type="xs:dateTime" minOccurs="0"/>
+      <xs:element name="id" type="xs:long"/>
+      <xs:element name="message" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="product">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="qty" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+
