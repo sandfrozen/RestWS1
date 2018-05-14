@@ -25,9 +25,9 @@ public class RESTTester {
     private static Client client = ClientBuilder.newClient();
 
     public static void main(String args[]) {
-//        getMessages();
-//        getMessage(1);
+        getMessages();
         postNewMessage();
+        getMessages();
         getMessage(4);
     }
 
@@ -39,6 +39,7 @@ public class RESTTester {
         String messages = target.request(MediaType.APPLICATION_JSON).get(String.class);
         //List<Message> messagesList = target.request(MediaType.APPLICATION_JSON).get(new GenericType<List<Message>>() { });
         System.out.println("messages: " + messages);
+        System.out.println("");
     }
 
     private static void getMessage(int id) {
@@ -51,14 +52,18 @@ public class RESTTester {
         System.out.println("response: " + response);
         String message = target.request(MediaType.APPLICATION_JSON).get(String.class);
         System.out.println("message: " + message);
+        System.out.println("");
+
     }
 
     private static void postNewMessage() {
         WebTarget target = client.target("http://localhost:8080/RestWS1/webresources/messages/");
-        Message message = new Message("Czwarta wiadomość", "Wiktor");
+        Message message = new Message("Czwarta wiadomość", "Jan");
         Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(message, "application/json; charset=UTF-8"));
 
-        System.out.println("Post New Message " + message.getId() + ": " + message.getAuthor() + ", " + message.getMessage());
+        System.out.println("Post New Message: " + message.getAuthor() + ", " + message.getMessage());
         System.out.println("response: " + response);
+        System.out.println("");
+
     }
 }

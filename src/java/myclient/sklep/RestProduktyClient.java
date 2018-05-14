@@ -17,23 +17,25 @@ import myclient.Sklep;
 public class RestProduktyClient {
 
     public static void main(String[] args) {
-//        System.out.println("Start");
-//        System.out.println("-------------------");
-//        Sklep client = new Sklep();
-//        ResponseList allProdukty = client.getAllProdukty(ResponseList.class);
-//
-//        for (Produkt p : allProdukty.getProdukty()) {
-//            System.out.println(p.getNazwa());
-//        }
-//
-//        System.out.println("-------------------");
-//        System.out.println("End");
-
         ProxySelector.setDefault(new CustomProxySelector());
+        
         System.out.println("Start");
         System.out.println("-------------------");
         Sklep client = new Sklep();
-        ResponseList allProdukty = client.findProducts("", "d", 1800);
+        ResponseList allProdukty = client.getAllProdukty(ResponseList.class);
+
+        for (Produkt p : allProdukty.getProdukty()) {
+            System.out.println(p.getNazwa());
+        }
+
+        System.out.println("-------------------");
+        System.out.println("End");
+
+        
+        System.out.println("Start - wyszukiwanie producent \"d\"");
+        System.out.println("-------------------");
+        client = new Sklep();
+        allProdukty = client.findProducts("", "d", 1800);
 
         for (Produkt p : allProdukty.getProdukty()) {
             System.out.println(p.getNazwa());
