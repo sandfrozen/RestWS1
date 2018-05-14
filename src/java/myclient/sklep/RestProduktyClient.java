@@ -32,6 +32,7 @@ public class RestProduktyClient {
         System.out.println("End");
 
         
+        
         System.out.println("Start - wyszukiwanie producent \"d\"");
         System.out.println("-------------------");
         client = new Sklep();
@@ -43,7 +44,6 @@ public class RestProduktyClient {
 
         System.out.println("-------------------");
         System.out.println("End");
-
     }
 
 }

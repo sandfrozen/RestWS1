@@ -20,7 +20,7 @@ import model.Message;
  *
  * @author tomek.buslowski
  */
-public class RESTTester {
+public class MessageResourceTester {
 
     private static Client client = ClientBuilder.newClient();
 
@@ -34,6 +34,7 @@ public class RESTTester {
     private static void getMessages() {
         WebTarget target = client.target("http://localhost:8080/RestWS1/webresources/messages");
         Response response = target.request().get();
+        
         System.out.println("Get Messages:");
         System.out.println("response: " + response);
         String messages = target.request(MediaType.APPLICATION_JSON).get(String.class);
@@ -45,7 +46,6 @@ public class RESTTester {
     private static void getMessage(int id) {
 
         WebTarget target = client.target("http://localhost:8080/RestWS1/webresources/messages/" + id);
-
         Response response = target.request().get();
 
         System.out.println("Get Message " + id + ":");
