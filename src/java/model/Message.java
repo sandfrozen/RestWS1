@@ -5,7 +5,9 @@
  */
 package model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -14,11 +16,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class Message {
-    
+
     private long id;
     private String message;
     private Date created;
     private String author;
+
+    private List<Link> links = new ArrayList<>();
 
     public Message() {
     }
@@ -29,10 +33,29 @@ public class Message {
         this.created = new Date();
         this.author = author;
     }
+
     public Message(String message, String author) {
         this.message = message;
         this.created = new Date();
         this.author = author;
+    }
+
+    public List<Link> getLinks() {
+        return links;
+    }
+
+    public void setLinks(List<Link> links) {
+        this.links = links;
+    }
+
+    public void addLink(String rel, String link) {
+        Link newLink = new Link(rel, link);
+        for (Link l : links) {
+            if (l.getRel() == rel) {
+                return;
+            }
+        }
+        links.add(newLink);
     }
 
     /**
@@ -66,14 +89,14 @@ public class Message {
     /**
      * @return the created
      */
-    public Date getCreaated() {
+    public Date getCreated() {
         return created;
     }
 
     /**
      * @param creaated the created to set
      */
-    public void setCreaated(Date creaated) {
+    public void setCreated(Date creaated) {
         this.created = creaated;
     }
 
@@ -90,7 +113,11 @@ public class Message {
     public void setAuthor(String author) {
         this.author = author;
     }
-    
+
+    @Override
+    public String toString() {
+        return "{ id: " + this.id + ", name: \"" + this.author + "\" }";
+    }
     
     
 }

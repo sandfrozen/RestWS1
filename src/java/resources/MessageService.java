@@ -42,7 +42,7 @@ public class MessageService {
     
     public Message createMessage(Message message) {
         message.setId(messages.size()+ 1L);
-        messages.put(messages.size()+ 1L, message);
+        messages.put(message.getId(), message);
         
         return message;
     }

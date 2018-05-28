@@ -5,8 +5,19 @@
  */
 package service;
 
+import filters.Logowanie;
+import java.math.BigDecimal;
+import java.net.URI;
+import java.util.LinkedList;
 import model.Message;
 import java.util.List;
+import javax.ejb.Singleton;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -16,7 +27,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import resources.MessageService;
 
 /**
@@ -24,9 +38,25 @@ import resources.MessageService;
  * @author tomek.buslowski
  */
 @Path("/messages")
+@Logowanie
+//@Singleton
 public class MessageResource {
 
+    int i = 0;
+
+    @GET
+    @Path("/iterator")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getIterator() {
+        return "i = " + i++;
+    }
+
     MessageService messageService = MessageService.getInstance();
+
+    @Path("{messageId}/comments")
+    public CommentsResource getComments(@PathParam("messageId") Long id) {
+        return new CommentsResource();
+    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -47,16 +77,35 @@ public class MessageResource {
     @GET
     @Path("/{messageId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Message getMessage(@PathParam("messageId") Long id) {
+    public Response getMessage(@PathParam("messageId") Long id, @Context UriInfo uriInfo) {
+        Message message = messageService.getMessage(id);
 
-        return messageService.getMessage(id);
+        String self = uriInfo.getBaseUriBuilder()
+                .path(MessageResource.class)
+                .path(String.valueOf(message.getId()))
+                .build().toString();
+        message.addLink("self", self);
+
+        String comments = uriInfo.getBaseUriBuilder()
+                .path(MessageResource.class)
+                .path(MessageResource.class, "getComments")
+                .resolveTemplate("messageId", message.getId())
+                .build().toString();
+        message.addLink("comments", comments);
+
+        return Response.ok(message).build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Message createMessage(Message message) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createMessage(Message message, @Context UriInfo uriInfo) {
+        Message newMessage = messageService.createMessage(message);
+        String newId = String.valueOf(newMessage.getId());
+        URI uri = uriInfo.getAbsolutePathBuilder().path(newId).build();
+        Response response = Response.created(uri).entity(newMessage).build();
 
-        return messageService.createMessage(message);
+        return response;
     }
 
     @PUT
